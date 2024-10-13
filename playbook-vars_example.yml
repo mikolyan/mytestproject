@@ -1,0 +1,42 @@
+---
+- name: Ansibale Variables Playbook
+  hosts: all
+  become: yes
+
+
+  vars:
+    message1: Kolya
+    message2: Admin
+    secret  : 321703
+
+  tasks:
+    - name : Print Secret
+      debug:          
+        var: secret                                                                            # print variable key
+
+    - debug:
+        msg: "Password  {{ secret }}"                                                          # print vessages with variable
+
+    - debug:
+        msg: "Vladelec -->{{ owner }}<--"
+
+
+    - set_fact: full_message="{{ message1 }} {{ message2 }} {{ secret }} from {{ owner }}"    # add variables in one string
+
+    - debug:
+        var: full_message                                                                     # print some variables
+        
+    - debug:
+        var: ansible_distribution                                                             # print system var (from ansible all -m setup)
+        
+    - debug:
+        msg: "OS vercion {{ ansible_distribution }} {{ ansible_os_family }}"                                           # print message with sys var
+        
+    - shell: uptime
+      register: results                                                                       # set in var
+     
+    - debug:
+        var: results                                                                          # print var
+        
+    - debug:
+        var: results.stdout 

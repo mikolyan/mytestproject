@@ -1,0 +1,54 @@
+---
+- name: Ansible lesson 19
+  hosts: all
+  #any_errors_fatal: true # любая ошибка критична прерывает выполнение
+  any_errors_fatal: yes 
+  become: yes
+
+
+  tasks:
+  - name: Task number one
+    yum: name=treee state=latest
+    ignore_errors: yes
+
+  - name: task two
+    #shell: ls -la /home/
+    shell: echo "my home is beautifull" 
+    register: result # регистрируем в переменную
+    ##failed_when: "'ifcfg'in result.stdout" # завершает такс если находит в результате вывода ifcfg
+    ##failed_when: "'home' in result.cmd" 
+    #failed_when: result.rc == 0 #для примера если успех т.е. =0 бракуем # result.rc != 0 по умолчанию #### "rc": 0 - task OK \ rc == 1 task error
+
+
+  - debug:
+      var: result # print error
+
+
+# result.* берем с вывода
+# 
+# "changed": true,
+# "cmd": "echo \"my home is beautifull\"",
+# "delta": "0:00:00.003077",
+# "end": "2024-09-17 16:04:26.916885",
+# "failed": false,
+# "failed_when_result": false,
+# "rc": 0,
+# "start": "2024-09-17 16:04:26.913808",
+# "stderr": "",
+# "stderr_lines": [],
+# "stdout": "my home is beautifull",
+# "stdout_lines": [
+# "my home is beautifull"
+#
+
+
+  - name: read file
+    shell: cat /home/readme
+    register: result
+
+
+  - debug:
+      var: result # print error
+
+  - name: Task tree
+    shell: echo Test!

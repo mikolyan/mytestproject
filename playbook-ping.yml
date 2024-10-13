@@ -1,0 +1,10 @@
+---
+- name: Test Connections my server
+  hosts: all
+  become: yes
+
+  tasks:
+
+  - name: Ping my servers
+    ping:
+    run_once: true

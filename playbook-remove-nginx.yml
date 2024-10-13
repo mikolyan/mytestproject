@@ -1,0 +1,8 @@
+---
+- name: Remove Nginx WebServer
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Remove Nginx.service
+    yum: name=nginx state=removed

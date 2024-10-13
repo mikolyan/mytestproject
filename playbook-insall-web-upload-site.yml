@@ -1,0 +1,58 @@
+---
+- name: Install Apache Web Server and Upload My Web Site
+  hosts: all
+  become: yes
+
+  vars:
+    source_folder: ./WebSite2/
+    destin_folder: /var/www/html/
+
+  tasks: 
+  - name: Chek OS Family
+    debug: var=ansible_os_family
+
+  - block: # ===== Block for Redhat =====
+
+      - name: Install Apache Web Server on RedHat
+        yum: name=httpd state=latest
+
+      - name: Start WebServers and Enable service on RedHat
+        service: name=httpd state=started enabled=yes
+
+    when: ansible_os_family=="RedHat"
+
+  - block:  # ===== Block for Ubuntu
+
+      - name: Install Apache Web Server on Ubuntu
+        apt: name=apache2 state=latest
+
+      - name: Start WebServers and Enable service on Ubuntu
+        service: name=apache2 state=started enabled=yes
+    
+    when: ansible_os_family=="Ubundu"
+
+
+
+
+  - name: Copy MySite to MySevers on RedHat
+    copy: src={{ source_folder }}  dest={{ destin_folder }} mode=0555 # копируем всю папку
+    #with_fileglob: "{{ source_folder }}/*"    # копирует только все корневые файлы
+
+    notify:
+      - Restart Httpd Service # if file have been changed - restart service httpd
+      - Restart Apache2 Service
+                      
+
+
+# for notify
+
+  handlers:
+  - name: Restart Httpd Service
+    service: name=httpd state=restarted
+    when: ansible_os_family=="RedHat"
+
+  - name: Restart Apache2 Service
+    service: name=apache2 state=restarted
+    when: ansible_os_family=="Ubundu"
+    
+

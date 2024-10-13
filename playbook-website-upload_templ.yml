@@ -1,0 +1,30 @@
+---
+- name: Install Apache Web Server and Upload My Web Site
+  hosts: all
+  become: yes
+
+  vars:
+    source_folder: ./WebSite
+    destin_folder: /var/www/html/
+
+  tasks:
+  - name: Install Apache Web Server
+    yum: name=httpd state=latest
+
+  - name: Generated MySite to MySevers
+    template: src={{ source_folder }}/index.j2 dest={{ destin_folder }}/index.html mode=555 # add variablers to html code
+    notify: Restart Service # if file have been changed - restart service httpd
+    
+  - name: Generated MySite to MySevers
+    copy: src={{ source_folder }} dest={{ destin_folder }} mode=555
+    notify: Restart Service # if file have been changed - restart service httpd
+
+
+  - name: Start WebServers and Enable service
+    service: name=httpd state=started enabled=yes
+
+# for notify
+
+  handlers:
+  - name: Restart Service
+    service: name=httpd state=restarted

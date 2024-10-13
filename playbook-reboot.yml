@@ -1,0 +1,33 @@
+---
+- name: My Include example
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: reboot my servers
+    shell: sleep 3 && reboot now #shutdown -h now
+    async: 1
+    poll: 0
+
+  - name: Wait will my servers come up inline
+    wait_for:
+      host: "{{ inventory_hostname }}"
+      state: started
+      delay: 5
+      timeout: 40
+    delegate_to: 127.0.0.1
+
+  - name: Ping test
+    ping:
+ # запустиьт 1 раз   
+    run_once: true
+
+  - name: Get uptime information
+    ansible.builtin.shell: /usr/bin/uptime
+    register: uptime_result
+       
+       
+  - name: Print uptime information
+    ansible.builtin.debug:
+      var: uptime_result.stdout
+              

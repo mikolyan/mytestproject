@@ -1,0 +1,9 @@
+---
+- name: Remove Web Server
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Remove Apache WebSerwer
+    yum: name=httpd state=absent
+

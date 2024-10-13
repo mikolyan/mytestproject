@@ -1,0 +1,19 @@
+---
+- name: My Include example
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Delegate to
+      shell: echo This task has been delegated from {{ ansible_hostname }}  {{ ansible_nodename }}>> /home/ansible/deligated.log
+      delegate_to: 127.0.0.1 
+
+    - name: Ping test
+      include: playbook-ping-for-include.yml
+      #delegate_to: 127.0.0.1
+# import - берет сразу при запуске
+# include - берет после того ка кпройдет весь скрипт в процессе запуска таска
+
+    - name: Uptime servers
+      include: playbook-uptime-for-include.yml
+      #delegate_to: 127.0.0.1 #192.168.100.96

@@ -1,0 +1,11 @@
+---
+- name: Install Nginx WebServer
+  hosts: all
+  become: yes
+
+  tasks:
+  - name: Install Nginx
+    yum: name=nginx state=latest
+
+  - name: Start and Enabled Nginx.service
+    service: name=nginx state=started enabled=yes

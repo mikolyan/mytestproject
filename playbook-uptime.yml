@@ -1,0 +1,11 @@
+---
+- name: Check uptime of Linux servers
+  hosts: all
+  tasks:
+    - name: Get uptime information
+      ansible.builtin.shell: /usr/bin/uptime
+      register: uptime_result
+
+    - name: Print uptime information
+      ansible.builtin.debug:
+        var: uptime_result.stdout
